@@ -38,14 +38,24 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void receiveDetections(Detector.Detections<TextBlock> detections) {
-                SparseArray<TextBlock> items = detections.getDetectedItems();
-                StringBuilder value = new StringBuilder();
-                for (int i = 0; i < items.size(); ++i) {
-                    TextBlock item = items.valueAt(i);
-                    value.append(item.getValue());
-                    value.append("\n");
+                Log.d("Main", "receiveDetections");
+                final SparseArray<TextBlock> items = detections.getDetectedItems();
+                if (items.size() != 0) {
+                    barcodeValue.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            StringBuilder value = new StringBuilder();
+                            for (int i = 0; i < items.size(); ++i) {
+                                TextBlock item = items.valueAt(i);
+                                value.append(item.getValue());
+                                value.append("\n");
+                            }
+                            //update barcode value to TextView
+                            barcodeValue.setText(value.toString());
+                        }
+                    });
                 }
-                barcodeValue.setText(value.toString());
+
             }
         });
 
