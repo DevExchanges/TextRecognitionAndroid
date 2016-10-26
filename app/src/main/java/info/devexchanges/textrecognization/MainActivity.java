@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SurfaceView cameraView;
     private TextView barcodeValue;
-    private CameraSource mCameraSource;
+    private CameraSource cameraSource;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                                 value.append(item.getValue());
                                 value.append("\n");
                             }
-                            //update barcode value to TextView
+                            //update text block content to TextView
                             barcodeValue.setText(value.toString());
                         }
                     });
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             Log.w("MainActivity", "Detector dependencies are not yet available.");
         }
 
-        mCameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
+        cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(1280, 1024)
                 .setRequestedFps(2.0f)
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
                     //noinspection MissingPermission
-                    mCameraSource.start(cameraView.getHolder());
+                    cameraSource.start(cameraView.getHolder());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                mCameraSource.stop();
+                cameraSource.stop();
             }
         });
     }
@@ -95,6 +95,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        cameraSource.release();
     }
 }
